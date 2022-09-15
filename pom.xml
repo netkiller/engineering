@@ -1,0 +1,119 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cn.netkiller</groupId>
+	<artifactId>bottleneck</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>bottleneck</name>
+	<description>bottleneck</description>
+	<organization>
+		<name>Netkiller Spring Cloud 手札</name>
+		<url>https://www.netkiller.cn</url>
+	</organization>
+	<developers>
+		<developer>
+			<name>Neo</name>
+			<email>netkiller@msn.com</email>
+			<organization>Netkiller Spring Cloud 手札</organization>
+			<organizationUrl>https://www.netkiller.cn</organizationUrl>
+			<roles>
+				<role>Author</role>
+			</roles>
+		</developer>
+	</developers>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.3</version>
+		<relativePath />
+	</parent>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<!-- Exclude the Tomcat dependency -->
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- Use Undertow instead Tomcat -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-undertow</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>1.2.2</version>
+				<configuration>
+					<imageName>netkiller/${project.artifactId}</imageName>
+					<baseImage>openjdk:19-alpine</baseImage>
+					<maintainer>netkiller@msn.com</maintainer>
+					<volumes>/tmp</volumes>
+					<workdir>/srv</workdir>
+					<exposes>8080</exposes>
+					<env>
+						<JAVA_OPTS>-server -Xms128m -Xmx2048m</JAVA_OPTS>
+					</env>
+					<entryPoint>["sh", "-c", "java ${JAVA_OPTS} -jar /srv/${project.build.finalName}.jar ${SPRING_OPTS}"]</entryPoint>
+					<resources>
+						<resource>
+							<targetPath>/srv</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+					<image>netkiller/${project.artifactId}</image>
+					<newName>netkiller/${project.artifactId}:${project.version}</newName>
+					<!-- <serverId>docker-hub</serverId> -->
+					<registryUrl>http://${docker.registry}/v2/</registryUrl>
+					<imageTags>
+						<imageTag>undertow</imageTag>
+						<!--
+						<imageTag>tomcat</imageTag>
+						<imageTag>${project.version}</imageTag>
+						<imageTag>latest</imageTag>
+						-->
+					</imageTags>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
