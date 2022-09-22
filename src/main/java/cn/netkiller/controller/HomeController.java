@@ -1,10 +1,15 @@
 package cn.netkiller.controller;
 
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,5 +53,29 @@ public class HomeController {
 	public String info(@RequestParam("msg") String msg) {
 		logger.info(msg);
 		return msg;
+	}
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
+	@GetMapping("/jdbc")
+	public String jdbc() {
+		String query = "SELECT properties_value, price_value, reference_name from ejy_goods_price where id < 100 ";
+		return jdbcTemplate.queryForObject(query, (resultSet, i) -> {
+			System.out.println(resultSet.getString(1) + "," + resultSet.getString(2) + "," + resultSet.getString(3));
+//			System.out.println(resultSet.toString());
+			return (resultSet.toString());
+		});
+	}
+
+	@Autowired
+	private RedisTemplate<String, String> redisTemplate;
+
+	@GetMapping("/redis")
+	public String redis() {
+		redisTemplate.opsForValue().set("name","neo",10, TimeUnit.SECONDS);
+		String name = (String) redisTemplate.opsForValue().get("name");
+//		redisTemplate.
+		return name;
 	}
 }
