@@ -60,11 +60,10 @@ public class HomeController {
 
 	@GetMapping("/jdbc")
 	public String jdbc() {
-		String query = "SELECT properties_value, price_value, reference_name from ejy_goods_price where id < 100 ";
+		String query = "SELECT properties_value, price_value, reference_name from ejy_goods_price limit 1";
 		return jdbcTemplate.queryForObject(query, (resultSet, i) -> {
 			System.out.println(resultSet.getString(1) + "," + resultSet.getString(2) + "," + resultSet.getString(3));
-//			System.out.println(resultSet.toString());
-			return (resultSet.toString());
+			return ("OK");
 		});
 	}
 
@@ -73,9 +72,8 @@ public class HomeController {
 
 	@GetMapping("/redis")
 	public String redis() {
-		redisTemplate.opsForValue().set("name","neo",10, TimeUnit.SECONDS);
+		redisTemplate.opsForValue().set("name", "neo", 10, TimeUnit.SECONDS);
 		String name = (String) redisTemplate.opsForValue().get("name");
-//		redisTemplate.
 		return name;
 	}
 }
