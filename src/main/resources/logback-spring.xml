@@ -27,18 +27,31 @@
 		</sift>
 	</appender>
 	<springProfile name="prod">
-		<appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-			<destination>127.0.0.1:4567</destination>
-			<encoder class="net.logstash.logback.encoder.LogstashEncoder">
-				<providers>
-					<timestamp />
-					<logLevel />
-					<threadName />
-					<loggerName />
-					<message />
-				</providers>
-			</encoder>
+		<!-- <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender"> <destination>127.0.0.1:4567</destination> <encoder class="net.logstash.logback.encoder.LogstashEncoder"> <providers> <timestamp /> <logLevel /> <threadName /> <loggerName /> <message /> </providers> </encoder> </appender> -->
+		<appender name="FLUENT" class="ch.qos.logback.more.appenders.DataFluentAppender">
+			<tag>development</tag>
+			<label>normal</label>
+			<remoteHost>172.18.200.10</remoteHost>
+			<port>24224</port>
+<!-- 			<maxQueueSize>20</maxQueueSize> -->
 		</appender>
+	</springProfile>
+	<springProfile name="fluentd">
+		<property name="FLUENTD_HOST" value="172.18.200.10" />
+		<property name="FLUENTD_HOST1" value="${FLUENTD_HOST:-${DOCKER_HOST:-localhost}}" />
+		<property name="FLUENTD_PORT" value="${FLUENTD_PORT:-24224}" />
+		<appender name="FLUENT" class="ch.qos.logback.more.appenders.DataFluentAppender">
+			<tag>test</tag>
+			<label>normal</label>
+			<remoteHost>${FLUENTD_HOST}</remoteHost>
+			<port>${FLUENTD_PORT}</port>
+			<maxQueueSize>20</maxQueueSize>
+		</appender>
+		<logger name="fluentd" level="debug" additivity="false">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="FILE" />
+			<appender-ref ref="FLUENT" />
+		</logger>
 	</springProfile>
 
 	<root level="info">
@@ -51,7 +64,12 @@
 		</springProfile>
 		<springProfile name="prod">
 			<appender-ref ref="CONSOLE" />
-			<appender-ref ref="logstash" />
+			<appender-ref ref="FLUENT" />
+			<!-- <appender-ref ref="logstash" /> -->
+		</springProfile>
+		<springProfile name="fluentd">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="FLUENT" />
 		</springProfile>
 	</root>
 </configuration>
