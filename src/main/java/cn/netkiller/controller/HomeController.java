@@ -33,11 +33,11 @@ public class HomeController {
 		Marker customer = MarkerFactory.getMarker(LogMarker.customer.toString());
 		Marker market = MarkerFactory.getMarker(LogMarker.market.toString());
 		logger.info("AAAAAAAAA");
-		logger.info(finance, "BBBBBBBBB");
+		logger.info(finance, "test");
 		// logger.error(finance, "This is a serious an error requiring the admin's attention", new Exception("Just testing"));
-		logger.info(finance, "BBBBBBBBB");
-		logger.info(customer, "BBBBBBBBB");
-		logger.info(market, "BBBBBBBBB");
+		logger.info(finance, "finance");
+		logger.info(customer, "customer");
+		logger.info(market, "market");
 
 		MDC.put("userId", "0001");
 		logger.info("0001用户");
