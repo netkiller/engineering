@@ -1,5 +1,7 @@
 package cn.netkiller.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -28,17 +30,6 @@ public class HomeController {
 
 	@GetMapping("/")
 	public String index() {
-
-		Marker finance = MarkerFactory.getMarker(LogMarker.finance.toString());
-		Marker customer = MarkerFactory.getMarker(LogMarker.customer.toString());
-		Marker market = MarkerFactory.getMarker(LogMarker.market.toString());
-		logger.info("AAAAAAAAA");
-		logger.info(finance, "test");
-		// logger.error(finance, "This is a serious an error requiring the admin's attention", new Exception("Just testing"));
-		logger.info(finance, "finance");
-		logger.info(customer, "customer");
-		logger.info(market, "market");
-
 		MDC.put("userId", "0001");
 		logger.info("0001用户");
 		MDC.clear();
@@ -46,12 +37,41 @@ public class HomeController {
 		MDC.put("userId", "0002");
 		logger.info("0002用户");
 		MDC.clear();
-		return "Hello world!!!";
+		return "Hello world!!!\r\n";
+	}
+
+	@GetMapping("/log")
+	public String log() {
+		Marker finance = MarkerFactory.getMarker(LogMarker.finance.toString());
+		Marker customer = MarkerFactory.getMarker(LogMarker.customer.toString());
+		Marker market = MarkerFactory.getMarker(LogMarker.market.toString());
+		logger.info("常规日志");
+		logger.info(finance, "test");
+		// logger.error(finance, "This is a serious an error requiring the admin's attention", new Exception("Just testing"));
+		logger.info(finance, "finance");
+		logger.info(customer, "customer");
+		logger.info(market, "market");
+		return "OK!!!\r\n";
+	}
+
+	@GetMapping("/log/marker")
+	public String marker(@RequestParam("marker") String marker, @RequestParam("msg") String msg) {
+		logger.info(MarkerFactory.getMarker(marker), msg);
+		msg += "\r\n";
+		return msg;
 	}
 
 	@GetMapping("/info")
-	public String info(@RequestParam("msg") String msg) {
-		logger.info(msg);
+	public String info(@RequestParam("marker") String marker, @RequestParam("msg") String msg) {
+		msg += "\r\n";
+		List<String> list = new ArrayList<String>();
+		list.add("finance");
+		list.add("customer");
+		if (list.contains(marker)) {
+			logger.info(MarkerFactory.getMarker(marker), msg);
+		} else {
+			logger.info(msg);
+		}
 		return msg;
 	}
 
