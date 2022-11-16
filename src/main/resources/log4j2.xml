@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<properties>
+		<property name="log.pattern">[%d{yyyy-MM-dd HH:mm:ss}] [${hostName}] [%p] [%t] %l - %m%n</property>
+		<property name="log.home">/tmp/logs</property>
+		<property name="log.level">info</property>
+	</properties>
+	<Appenders>
+		<!-- 控制台 -->
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="${log.pattern}" />
+		</Console>
+
+		<!-- INFO级别日志 -->
+		<RollingFile name="RollingFileInfo" fileName="${log.home}/info.log" filePattern="${log.home}/info.%d{yyyy-MM-dd}.log">
+			<Filters>
+				<ThresholdFilter level="INFO" />
+				<ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL" />
+			</Filters>
+			<PatternLayout pattern="${log.pattern}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="false" />
+			</Policies>
+		</RollingFile>
+
+		<!-- WARN级别日志 -->
+		<RollingFile name="RollingFileWarn" fileName="${log.home}/warn.log" filePattern="${log.home}/warn.%d{yyyy-MM-dd}.log">
+			<Filters>
+				<ThresholdFilter level="WARN" />
+				<ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL" />
+			</Filters>
+			<PatternLayout pattern="${log.pattern}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="false" />
+			</Policies>
+		</RollingFile>
+
+		<!-- ERROR级别日志 -->
+		<RollingFile name="RollingFileError" fileName="${log.home}/error.log" filePattern="${log.home}/error.%d{yyyy-MM-dd}.log">
+			<Filters>
+				<ThresholdFilter level="ERROR" />
+			</Filters>
+			<PatternLayout pattern="${log.pattern}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="false" />
+			</Policies>
+		</RollingFile>
+
+		<Gelf name="Gelf" host="udp:172.18.200.10" port="12201" version="1.1" extractStackTrace="true" filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" originHost="%host{fqdn}" additionalFieldTypes="fieldName1=String,fieldName2=Double,fieldName3=Long">
+
+			<Field name="timestamp" pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}" />
+			<Field name="logger" pattern="%logger" />
+			<Field name="level" pattern="%level" />
+			<!-- <Field name="className" pattern="%C" /> -->
+			<Field name="class" pattern="%C{1}" />
+			<Field name="method" pattern="%M" />
+			<Field name="line" pattern="%L" />
+			<!-- <Field name="server" pattern="%host" /> -->
+
+			<!-- <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" /> <Field name="level" pattern="%level" /> <Field name="simpleClassName" pattern="%C{1}" /> <Field name="className" pattern="%C" /> <Field name="server" pattern="%host" /> <Field name="server.fqdn" pattern="%host{fqdn}" /> -->
+
+			<!-- This is a static field -->
+			<!-- <Field name="fieldName2" literal="fieldValue2" /> -->
+
+			<!-- This is a field using MDC -->
+			<!-- <Field name="mdcField2" mdc="mdcField2" /> <DynamicMdcFields regex="mdc.*" /> <DynamicMdcFields regex="(mdc|MDC)fields" /> -->
+			<Field name="marker" pattern="%marker" />
+			<Filters>
+				<MarkerFilter marker="finance" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+				<MarkerFilter marker="market" onMatch="ACCEPT" onMismatch="DENY" />
+			</Filters>
+		</Gelf>
+	</Appenders>
+	<Loggers>
+		<Root level="${sys:log.level}">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="Gelf" />
+			<!-- <AppenderRef ref="RollingFileInfo" /> <AppenderRef ref="RollingFileWarn" /> <AppenderRef ref="RollingFileError" /> -->
+		</Root>
+	</Loggers>
+</Configuration>
