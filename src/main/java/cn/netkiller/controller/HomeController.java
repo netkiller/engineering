@@ -47,7 +47,6 @@ public class HomeController {
 		Marker market = MarkerFactory.getMarker(LogMarker.market.toString());
 		logger.info("常规日志");
 		logger.info(finance, "test");
-		// logger.error(finance, "This is a serious an error requiring the admin's attention", new Exception("Just testing"));
 		logger.info(finance, "finance");
 		logger.info(customer, "customer");
 		logger.info(market, "market");
@@ -72,6 +71,7 @@ public class HomeController {
 		} else {
 			logger.info(msg);
 		}
+		// logger.error(finance, "This is a serious an error requiring the admin's attention", new Exception("Just testing"));
 		return msg;
 	}
 
