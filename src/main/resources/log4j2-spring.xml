@@ -9,6 +9,18 @@
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout pattern="${log.pattern}" />
 		</Console>
+
+		<RollingFile name="File" fileName="/tmp/finance.log" filePattern="/tmp/finance.%d{yyyy-MM-dd}.log">
+			<PatternLayout pattern="${log.pattern}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="false" />
+			</Policies>
+			<Filters>
+				<MarkerFilter marker="finance" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+				<MarkerFilter marker="jzb" onMatch="ACCEPT" onMismatch="DENY" />
+			</Filters>
+		</RollingFile>
+
 		<Gelf name="dev" host="udp:172.18.200.10" port="12201" version="1.1" extractStackTrace="true" filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192" originHost="%host{fqdn}">
 			<Field name="timestamp" pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}" />
 			<Field name="logger" pattern="%logger" />
@@ -26,6 +38,7 @@
 	<Loggers>
 		<Root level="${sys:log.level}">
 			<AppenderRef ref="Console" />
+			<AppenderRef ref="File" />
 			<AppenderRef ref="${spring:profiles.active}" />
 		</Root>
 	</Loggers>
