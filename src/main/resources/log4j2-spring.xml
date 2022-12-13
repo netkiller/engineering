@@ -31,7 +31,7 @@
 			<Field name="marker" pattern="%marker" />
 			<Filters>
 				<MarkerFilter marker="finance" onMatch="ACCEPT" onMismatch="NEUTRAL" />
-				<MarkerFilter marker="market" onMatch="ACCEPT" onMismatch="DENY" />
+				<MarkerFilter marker="jzb" onMatch="ACCEPT" onMismatch="DENY" />
 			</Filters>
 		</Gelf>
 	</Appenders>

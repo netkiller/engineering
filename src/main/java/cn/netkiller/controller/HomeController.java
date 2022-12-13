@@ -51,6 +51,7 @@ public class HomeController {
 		logger.info(customer, "customer");
 		logger.info(market, "market");
 		logger.error(finance, "finance alert!");
+		logger.warn(finance, "finance warn!");
 		return "OK!!!\r\n";
 	}
 
