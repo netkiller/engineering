@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.0</version>
+		<version>3.0.1</version>
 		<relativePath />
 	</parent>
 	<properties>
@@ -94,12 +94,12 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
-
+<!--
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 		</dependency>
-<!--		
+		
 		<dependency>
 			<groupId>com.alibaba.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
@@ -190,11 +190,12 @@
 					<!-- <serverId>docker-hub</serverId> -->
 					<registryUrl>http://${docker.registry}/v2/</registryUrl>
 					<imageTags>
-						<imageTag>undertow</imageTag>
-						<!-- <imageTag>tomcat</imageTag> <imageTag>${project.version}</imageTag> <imageTag>latest</imageTag> -->
+						<imageTag>log4j2</imageTag>
+						<!-- <imageTag>undertow</imageTag> <imageTag>tomcat</imageTag> <imageTag>${project.version}</imageTag> <imageTag>latest</imageTag> -->
 					</imageTags>
 				</configuration>
 			</plugin>
+			
 		</plugins>
 	</build>
 </project>
