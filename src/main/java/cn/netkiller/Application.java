@@ -24,7 +24,7 @@ public class Application {
 	@PreDestroy
 	public void destroy() {
 		System.out.printf("==================== destroy ====================");
-		logger.warn(MarkerFactory.getMarker("finance"), "XXX 系统销毁");
+		logger.error(MarkerFactory.getMarker("finance"), "XXX 系统销毁");
 	}
 
 	public static void main(String[] args) {
