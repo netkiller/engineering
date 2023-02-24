@@ -2,10 +2,17 @@ package cn.netkiller;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 //import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 //@EnableDiscoveryClient
 @SpringBootApplication
+//@ComponentScan()
+//@EnableJpaRepositories()
+//@EnableCaching
+//@EnableScheduling
 public class Application {
 
 	@jakarta.annotation.PostConstruct
@@ -19,7 +26,7 @@ public class Application {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("Netkiller bottleneck tool!");
+//		System.out.println("Netkiller bottleneck tool!");
 		SpringApplication.run(Application.class, args);
 	}
 }
