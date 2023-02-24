@@ -1,24 +1,21 @@
 package cn.netkiller;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+//import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 @SpringBootApplication
 public class Application {
 
-	@PostConstruct
+	@jakarta.annotation.PostConstruct
 	public void init() {
-		System.out.printf("==================== init ====================");
+		System.out.println("==================== init ====================");
 	}
 
-	@PreDestroy
+	@jakarta.annotation.PreDestroy
 	public void destroy() {
-		System.out.printf("==================== destroy ====================");
+		System.out.println("==================== destroy ====================");
 	}
 
 	public static void main(String[] args) {
