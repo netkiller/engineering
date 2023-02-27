@@ -1,6 +1,6 @@
 package cn.netkiller.repository;
 
-import cn.netkiller.record.User;
+import cn.netkiller.domain.User;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -15,14 +15,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	// 默认提供了Optional<User> findById(Long id);
 
-	User findByName(String name);
+//	User findByName(Long name);
 
-	@Query("select u from User u where u.id <= ?1")
-	Page<User> findMore(Long maxId, Pageable pageable);
-
-	@Modifying
-	@Transactional
-	@Query("update User u set u.name = ?1 where u.id = ?2")
-	int updateById(String name, Long id);
+//	@Query("select u from User u where u.id <= ?1")
+//	Page<User> findMore(Long maxId, Pageable pageable);
+//
+//	@Modifying
+//	@Transactional
+//	@Query("update User u set u.name = ?1 where u.id = ?2")
+//	int updateById(String name, Long id);
 
 }

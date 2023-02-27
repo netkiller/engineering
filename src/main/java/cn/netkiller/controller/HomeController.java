@@ -94,4 +94,6 @@ public class HomeController {
 //		String name = (String) redisTemplate.opsForValue().get("name");
 //		return name;
 //	}
+
+
 }
