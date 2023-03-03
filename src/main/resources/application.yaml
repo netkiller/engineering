@@ -2,22 +2,27 @@ server:
   port: 8080
 
 logging:
+#  config: classpath:logback-spring.xml
   level:
+    root: info
     org.springframework.web: DEBUG
     org.springframework.web.servlet.DispatcherServlet: DEBUG
     org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping: trace
-    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: trace
+#    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: trace
   pattern:
     level: '%clr(%5p) %clr([%X{traceId:-},%X{spanId:-},%X{parentId:-}]){green}'
 #    level: '%d{ABSOLUTE} [%X{traceId}/%X{spanId}] %-5p [%t] %C{2} - %m%n'
+#    level: '%d{ABSOLUTE} [%X{X-B3-TraceId},%X{X-B3-SpanId},%X{X-B3-ParentSpanId},%X{X-Span-Export}] %-5p [%t] %C{2} - %m%n'
+#    level: '%d{ABSOLUTE} [%X{X-B3-TraceId},%X{X-B3-SpanId},%X{X-B3-ParentSpanId},%X{X-Span-Export}] %-5p [%t] %C{2} - %m%n'
 spring:
   application:
     name: engineering
   sleuth:
-    enabled: true
-    default-logging-pattern-enabled: true
+    enabled: on
+#    default-logging-pattern-enabled: true
     sampler:
-      probability: 1.0
+      probability: 1
+      rate: 100
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: jdbc:mysql://172.18.200.5:3306/test?useUnicode=true&characterEncoding=UTF-8

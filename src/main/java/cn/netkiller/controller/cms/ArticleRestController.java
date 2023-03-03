@@ -1,17 +1,14 @@
-//package cn.netkiller.controller.cms;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Optional;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.data.mongodb.core.MongoTemplate;
-//import org.springframework.data.mongodb.core.query.Criteria;
-//import org.springframework.data.mongodb.core.query.Query;
-//import org.springframework.data.mongodb.core.query.Update;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.PathVariable;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
+package cn.netkiller.controller.cms;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import cn.netkiller.domain.Article;
+import cn.netkiller.repository.ArticleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 //
 //import api.domain.Article;
 //import api.domain.Article.Author;
@@ -19,9 +16,9 @@
 //import api.repository.ArticleRepository;
 //import api.repository.HypermediaRepository;
 //
-//@RestController
-//@RequestMapping("/article")
-//public class ArticleRestController {
+@RestController
+@RequestMapping("/article")
+public class ArticleRestController {
 //
 //	@Autowired
 //	private ArticleRepository articleRepository;
@@ -35,7 +32,27 @@
 //	public ArticleRestController() {
 //		// TODO Auto-generated constructor stub
 //	}
-//
+
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @GetMapping("/save")
+    @ResponseBody
+    public String save() {
+        articleRepository.save(new Article("Neo", "Chen"));
+        return "OK";
+    }
+
+    @GetMapping("/all")
+    @ResponseBody
+    public String all() {
+
+        for (Article article : articleRepository.findAll()) {
+            System.out.println(article);
+        }
+        return "OK";
+    }
+
 //	@GetMapping("/save")
 //	public Article ref() {
 //
@@ -104,4 +121,4 @@
 //
 //	}
 //
-//}
+}

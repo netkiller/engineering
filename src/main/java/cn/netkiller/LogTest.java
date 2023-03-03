@@ -6,7 +6,7 @@ import org.slf4j.MDC;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-import cn.netkiller.LogMarker;
+import cn.netkiller.domain.LogMarker;
 
 public class LogTest {
 
