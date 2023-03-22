@@ -1,9 +1,10 @@
 package cn.netkiller.controller.project;
 
-import cn.netkiller.gantt.A;
-import cn.netkiller.gantt.Rect;
-import cn.netkiller.gantt.Svg;
-import cn.netkiller.gantt.Text;
+import cn.netkiller.gantt.html.Html;
+import cn.netkiller.gantt.svg.A;
+import cn.netkiller.gantt.svg.Rect;
+import cn.netkiller.gantt.svg.Svg;
+import cn.netkiller.gantt.svg.Text;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -35,22 +36,8 @@ public class ProjectController {
 
     @GetMapping("/svg")
     @ResponseBody
-    public String svg() {
-        String html = "";
-        try {
-            Svg svg = new Svg();
-            Node element = svg.group("test");
-            element.appendChild(svg.text(new Text("Text", 5, 5, 10)));
-//            Node element = svg.text("Text");
-            svg.appendChild(element);
-            svg.appendChild(svg.rectangle(new Rect(1, 1, 10, 10)));
-            Node a = svg.a(new A("https://www.netkiller.cn", "_blank"));
-            a.appendChild(svg.text(new Text("Neo", 15, 15, 10)));
-            svg.appendChild(a);
-            html = svg.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return html;
+    public String html() {
+        Html html = new Html();
+        return html.rander();
     }
 }
