@@ -26,14 +26,18 @@ public class Project implements Serializable {
     @Column(name = "id", unique = true, nullable = false, insertable = true, updatable = false)
     public Long id;
     public String name;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     public Date start;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     public Date finish;
     public String resource;
-//    public Long parent;
-    public Long next;
+    //    public Long parent;
+    public Long predecessor;
 
     @Column(columnDefinition = "enum('Enabled','Disabled') DEFAULT 'Enabled' COMMENT '状态'")
     public String status;
+
+    public Boolean milestone;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -46,14 +50,15 @@ public class Project implements Serializable {
     public Date mtime;
 
 
-
-    @ManyToOne(targetEntity = Project.class, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-    @JoinColumn(name = "parent_id", referencedColumnName = "id", foreignKey = @ForeignKey(name="project_has_subproject"))
+    @ManyToOne(targetEntity = Project.class, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "parent_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "project_has_subproject"))
     public Project project;
 
-//    @JsonIgnore
+    //    @JsonIgnore
 //    @OneToMany(targetEntity = Project.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    public Set<Project> projects;
+    public Project() {
+    }
 
     public Project(String name, Date start, Date finish, String resource) {
         this.name = name;

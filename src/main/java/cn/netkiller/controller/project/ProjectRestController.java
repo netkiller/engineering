@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.List;
+import java.lang.Iterable;
 
 @RestController
 @RequestMapping("/project")
@@ -33,6 +35,17 @@ public class ProjectRestController {
         return "Hello world!!!\r\n";
     }
 
+    @GetMapping("/lists")
+    @ResponseBody
+//    public ResponseEntity<List<Project>> list() {
+    public Iterable<Project> lists() {
+        Iterable<Project> projects = projectRepository.findAll();
+        return (projects);
+    }
+
+    //
+//    ResponseEntity.status(HttpStatus.OK)
+//            .body(Object)
     @GetMapping("/save")
     @ResponseBody
     public String save() {

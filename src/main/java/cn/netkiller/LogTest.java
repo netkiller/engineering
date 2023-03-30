@@ -28,7 +28,7 @@ public class LogTest {
 
 		// System.out.println(uuid.toString());
 		
-		System.out.println(id);
+//		System.out.println(id);
 		// Marker finance = MarkerFactory.getMarker(LogMarker.finance.toString());
 		// Marker customer = MarkerFactory.getMarker(LogMarker.customer.toString());
 		// Marker market = MarkerFactory.getMarker(LogMarker.market.toString());
