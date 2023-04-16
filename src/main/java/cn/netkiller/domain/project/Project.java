@@ -11,12 +11,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Slf4j
 @Data
-//@AllArgsConstructor
-//@NoArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "project")
 public class Project implements Serializable {
@@ -37,10 +38,15 @@ public class Project implements Serializable {
     //    public Long parent;
     public Long predecessor;
 
-    @Column(columnDefinition = "enum('Enabled','Disabled') DEFAULT 'Enabled' COMMENT '状态'")
-    public String status;
 
     public Boolean milestone = false;
+    public Boolean parent = false;
+
+    @ManyToOne
+//            (targetEntity = Project.class, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "parent_id")
+//    @JoinColumn(name = "parent_id", referencedColumnName = "id", foreignKey = @ForeignKey(/*name = "project_has_subproject"*/))
+    public Project project;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -52,22 +58,21 @@ public class Project implements Serializable {
     @Column(columnDefinition = "TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更改时间'")
     public Date mtime;
 
+    @Column(columnDefinition = "enum('Enabled','Disabled') DEFAULT 'Enabled' COMMENT '状态'")
+    public String status;
 
-    @ManyToOne(targetEntity = Project.class, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "parent_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "project_has_subproject"))
-    public Project project;
-
-    //    @JsonIgnore
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL)
 //    @OneToMany(targetEntity = Project.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    public Set<Project> projects;
-    public Project() {
-    }
+    private Set<Project> projects; // = new HashSet<Project>(0);
 
-    public Project(String name, Date start, Date finish, String resource) {
-        this.name = name;
-        this.start = start;
-        this.finish = finish;
-        this.resource = resource;
-//        this.next = next;
-    }
+//    public Project() {
+//    }
+//
+//    public Project(String name, Date start, Date finish, String resource) {
+//        this.name = name;
+//        this.start = start;
+//        this.finish = finish;
+//        this.resource = resource;
+//    }
 }

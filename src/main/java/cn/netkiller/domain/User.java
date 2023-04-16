@@ -10,8 +10,8 @@ import java.io.Serializable;
 @Table(name = "users")
 @Data
 //@NoArgsConstructor
-public class User /*implements Serializable*/ {
-    //    private static final long serialVersionUID = 7998903421265538801L;
+public class User implements Serializable {
+    private static final long serialVersionUID = 7998903421265538801L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false, insertable = true, updatable = false)

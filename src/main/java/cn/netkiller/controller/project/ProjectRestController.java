@@ -5,9 +5,11 @@ import cn.netkiller.record.Gantt;
 import cn.netkiller.repository.project.ProjectRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,14 +71,28 @@ public class ProjectRestController {
 //            .body(Object)
     @PostMapping("/save")
     @ResponseBody
-    public ResponseEntity<String> save(@RequestBody Project project) {
-        projectRepository.save(project);
-//        projectRepository.save(new Project("test", new Date(), new Date(), "neo"));
-        return ResponseEntity.ok("OK");
+    @Transactional
+    public ResponseEntity<Project> save(@RequestBody Project project) {
+        try {
+            logger.debug(project.toString());
+
+            if (project.getProject() != null && project.getProject().getId() > 0) {
+                Project parent = projectRepository.findOneById(project.getProject().getId());
+                parent.setParent(true);
+                projectRepository.save(parent);
+            } else {
+                project.setProject(null);
+            }
+            projectRepository.save(project);
+        } catch (Exception e) {
+            return ResponseEntity.ok(project);
+        }
+        return ResponseEntity.ok(project);
     }
 
     @PostMapping("/change")
     @ResponseBody
+    @Transactional
     public ResponseEntity change(@RequestBody Project project) {
 
         try {
