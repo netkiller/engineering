@@ -1,6 +1,6 @@
 /target/
 .DS_Store
 /LOG_FILE_IS_UNDEFINED
-/.apt_generated_tests/
-/.idea/
-/.settings/
+.idea
+.settings
+.vscode
