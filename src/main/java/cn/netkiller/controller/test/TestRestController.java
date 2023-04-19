@@ -1,6 +1,7 @@
 package cn.netkiller.controller.test;//package cn.netkiller.controller;
 
-import org.apache.shardingsphere.core.strategy.keygen.SnowflakeShardingKeyGenerator;
+//import org.apache.shardingsphere.core.strategy.keygen.SnowflakeShardingKeyGenerator;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,14 +17,14 @@ public class TestRestController {
 
     }
 
-//	@Value("${key}")
-//	public String name;
+    @Value("${spring.shardingsphere.sharding.tables.test.key-generator.props.worker.id}")
+    public String name;
 
     // @Value("${user.name}")
     // private String userName;
 
-//    @GetMapping("/snow")
-//    public String snow() {
+    @GetMapping("/snow")
+    public String snow() {
 //        SnowflakeShardingKeyGenerator snow = new SnowflakeShardingKeyGenerator();
 //        AtomicLong atomic = new AtomicLong(0);
 //        snow.generateKey()
@@ -32,5 +33,6 @@ public class TestRestController {
 ////        Comparable<?> id = snow.generateKey();
 ////        return atomic.incrementAndGet();
 //        return snow.generateKey().toString();
-//    }
+        return this.name;
+    }
 }
