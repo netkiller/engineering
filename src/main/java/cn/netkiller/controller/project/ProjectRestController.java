@@ -66,9 +66,7 @@ public class ProjectRestController {
         return (projects);
     }
 
-    //
-//    ResponseEntity.status(HttpStatus.OK)
-//            .body(Object)
+
     @PostMapping("/save")
     @ResponseBody
     @Transactional
@@ -126,5 +124,17 @@ public class ProjectRestController {
 
 
         return ResponseEntity.ok(true);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Project> get(@PathVariable Long id) {
+        Project project = projectRepository.findOneById(id);
+        ResponseEntity<Project> body = ResponseEntity.status(HttpStatus.OK).body(project);
+        return body;
+    }
+    @GetMapping("/get/next/{id}")
+    public ResponseEntity<List<Project>> next(@PathVariable Long id) {
+        List<Project> project = projectRepository.findByPredecessor(id);
+        return ResponseEntity.ok(project);
     }
 }

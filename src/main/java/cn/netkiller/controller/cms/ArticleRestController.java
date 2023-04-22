@@ -1,10 +1,6 @@
 package cn.netkiller.controller.cms;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import cn.netkiller.domain.Article;
+import cn.netkiller.domain.cms.Article;
 import cn.netkiller.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,11 +1,9 @@
 package cn.netkiller.controller.user;
 
-import cn.netkiller.domain.Article;
 import cn.netkiller.domain.User;
 import cn.netkiller.repository.ArticleRepository;
 import cn.netkiller.repository.UserRepository;
 import cn.netkiller.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

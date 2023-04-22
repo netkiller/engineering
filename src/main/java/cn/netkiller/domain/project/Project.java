@@ -26,6 +26,7 @@ public class Project implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false, insertable = true, updatable = false)
+//    columnDefinition = "BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT "
     public Long id;
     public String name;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

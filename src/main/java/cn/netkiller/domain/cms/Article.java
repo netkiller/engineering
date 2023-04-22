@@ -1,21 +1,21 @@
-package cn.netkiller.domain;
+package cn.netkiller.domain.cms;
 
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 
-
-
 @Entity
-@Table(name = "article")
+@Table(name = "文章")
 public class Article implements Serializable {
     private static final long serialVersionUID = 7998903421265538801L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false, insertable = true, updatable = false)
+    @Column(name = "id", columnDefinition = "BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT")
     private Long id;
+
+    @Column(name = "标题")
     private String title;
+    @Column(name = "内容")
     private String content;
 
     public Article() {

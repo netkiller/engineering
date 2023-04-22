@@ -4,3 +4,6 @@
 .idea
 .settings
 .vscode
+/.apt_generated_tests/
+/.apt_generated/
+/.github/

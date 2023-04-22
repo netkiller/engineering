@@ -26,4 +26,6 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
     List<String> findAllResourceGroupByResource();
 
     Project findOneById(Long id);
+
+    List<Project> findByPredecessor(Long id);
 }
