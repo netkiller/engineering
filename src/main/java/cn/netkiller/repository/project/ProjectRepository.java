@@ -1,11 +1,12 @@
 package cn.netkiller.repository.project;
 
-import cn.netkiller.domain.User;
+
 import cn.netkiller.domain.project.Project;
-import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -22,10 +23,17 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
 
     @Query("SELECT MAX(p.finish) FROM Project p")
     Date findMaxFinish();
+
     @Query("SELECT resource FROM Project group by resource")
     List<String> findAllResourceGroupByResource();
 
     Project findOneById(Long id);
 
     List<Project> findByPredecessor(Long id);
+
+    @Modifying
+    @Query(nativeQuery = true, value = "UPDATE project p, (SELECT MIN(start) AS start, MAX(finish) AS finish FROM project WHERE parent_id = :id) t SET p.start = t.start, p.finish = t.finish WHERE p.id = :id")
+    public void updateStartAndFinishById(@Param("id") Long id);
+    @Query("SELECT id,name FROM Project")
+    Iterable<Project> getOptions();
 }

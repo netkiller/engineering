@@ -6,6 +6,7 @@ import cn.netkiller.repository.project.ProjectRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,9 @@ import java.util.List;
 @RequestMapping("/project")
 @Tag(name = "项目模块")
 @CrossOrigin(origins = "*")
+@Slf4j
 public class ProjectRestController {
-    private static final Logger logger = LoggerFactory.getLogger(ProjectRestController.class);
+//    private static final Logger logger = LoggerFactory.getLogger(ProjectRestController.class);
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -66,14 +68,23 @@ public class ProjectRestController {
         return (projects);
     }
 
+    @GetMapping("/option/lists")
+    @ResponseBody
+    public ResponseEntity<Iterable<Project>> option() {
+        Iterable<Project> projects = projectRepository.getOptions();
+        return ResponseEntity.ok(projects);
+    }
+
 
     @PostMapping("/save")
     @ResponseBody
     @Transactional
     public ResponseEntity<Project> save(@RequestBody Project project) {
         try {
-            logger.debug(project.toString());
-
+            log.debug(project.toString());
+            if (project.getMilestone() == true) {
+                project.setFinish(project.getStart());
+            }
             if (project.getProject() != null && project.getProject().getId() > 0) {
                 Project parent = projectRepository.findOneById(project.getProject().getId());
                 parent.setParent(true);
@@ -91,13 +102,13 @@ public class ProjectRestController {
     @PostMapping("/change")
     @ResponseBody
     @Transactional
-    public ResponseEntity change(@RequestBody Project project) {
-
+    public ResponseEntity<Project> change(@RequestBody Project project) {
+        Project tmp = null;
         try {
-            Project tmp = projectRepository.findOneById(project.getId());
+            tmp = projectRepository.findOneById(project.getId());
 
             if (tmp == null) {
-                return ResponseEntity.ok(false);
+                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(project);
             }
 
             if (project.getName() != null) {
@@ -112,18 +123,32 @@ public class ProjectRestController {
             if (project.getResource() != null) {
                 tmp.setResource(project.getResource());
             }
+            if (project.getPredecessor() != null) {
+                tmp.setPredecessor(project.getPredecessor());
+            }
+
+//     里程被，开始和完成是同一天
+            if (project.getMilestone() == true || tmp.getMilestone() == true) {
+                tmp.setFinish(project.getStart());
+            }
+            if (project.getProject() != null) {
+                tmp.setProject(project.getProject());
+            }
             tmp.setMtime(new Date());
 
-            logger.info(tmp.toString());
+            log.info(project.toString());
+            log.info(tmp.toString());
             projectRepository.save(tmp);
-
-
         } catch (Exception e) {
-            return ResponseEntity.ok(false);
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(project);
         }
-
-
-        return ResponseEntity.ok(true);
+        if (tmp.getProject() != null && tmp.getProject().getId() > 0) {
+            Project parent = projectRepository.findOneById(tmp.getProject().getId());
+            parent.setParent(true);
+            projectRepository.save(parent);
+            projectRepository.updateStartAndFinishById(tmp.getProject().getId());
+        }
+        return ResponseEntity.ok(tmp);
     }
 
     @GetMapping("/get/{id}")
@@ -132,9 +157,12 @@ public class ProjectRestController {
         ResponseEntity<Project> body = ResponseEntity.status(HttpStatus.OK).body(project);
         return body;
     }
+
     @GetMapping("/get/next/{id}")
     public ResponseEntity<List<Project>> next(@PathVariable Long id) {
         List<Project> project = projectRepository.findByPredecessor(id);
         return ResponseEntity.ok(project);
     }
+    // 更新父任务
+//    SELECT id, parent_id FROM test.project where  exists (select id from project p where project.id = p.parent_id) limit 100;
 }

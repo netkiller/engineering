@@ -1,5 +1,7 @@
 package cn.netkiller;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,20 +18,26 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableJpaRepositories()
 //@EnableCaching
 //@EnableScheduling
+@Slf4j
 public class Application {
 
-	@jakarta.annotation.PostConstruct
-	public void init() {
-		System.out.println("==================== init ====================");
-	}
+    @Value("${spring.application.name:netkiller}")
+    private String name;
 
-	@jakarta.annotation.PreDestroy
-	public void destroy() {
-		System.out.println("==================== destroy ====================");
-	}
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        System.out.println("==================== init {} ====================");
+        log.info("==================== start {} ====================", name);
+    }
 
-	public static void main(String[] args) {
+    @jakarta.annotation.PreDestroy
+    public void destroy() {
+        System.out.println("==================== destroy {} ====================");
+        log.info("==================== destroy {} ====================", name);
+    }
+
+    public static void main(String[] args) {
 //		System.out.println("Netkiller bottleneck tool!");
-		SpringApplication.run(Application.class, args);
-	}
+        SpringApplication.run(Application.class, args);
+    }
 }
