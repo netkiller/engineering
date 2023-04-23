@@ -124,12 +124,27 @@ public class ProjectRestController {
             tmp.setResource(project.getResource());
         }
         if (project.getPredecessor() != null) {
-            tmp.setPredecessor(project.getPredecessor());
+            if (project.getPredecessor() == 0L) {
+                tmp.setPredecessor(null);
+            } else {
+                tmp.setPredecessor(project.getPredecessor());
+            }
+
         }
 
 //     里程被，开始和完成是同一天
-        if (project.getMilestone() == true || tmp.getMilestone() == true) {
-            tmp.setFinish(project.getStart());
+        if (tmp.getStart() != tmp.getFinish()) {
+            tmp.setMilestone(false);
+
+        }
+//        else {
+//            tmp.setMilestone(true);
+//        }
+        if (project.getMilestone() != null) {
+            tmp.setMilestone(project.getMilestone());
+            if (project.getMilestone() == true) {
+                tmp.setFinish(tmp.getStart());
+            }
         }
         if (project.getProject() != null) {
             tmp.setProject(project.getProject());
