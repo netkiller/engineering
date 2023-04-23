@@ -5,6 +5,8 @@
 .settings
 .vscode
 .github
+.project
+.classpath
 /.apt_generated_tests/
 /.apt_generated/
 

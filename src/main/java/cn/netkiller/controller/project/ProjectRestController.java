@@ -103,45 +103,52 @@ public class ProjectRestController {
     @ResponseBody
     @Transactional
     public ResponseEntity<Project> change(@RequestBody Project project) {
-        Project tmp = null;
-        try {
-            tmp = projectRepository.findOneById(project.getId());
-
-            if (tmp == null) {
-                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(project);
-            }
-
-            if (project.getName() != null) {
-                tmp.setName(project.getName());
-            }
-            if (project.getStart() != null) {
-                tmp.setStart(project.getStart());
-            }
-            if (project.getFinish() != null) {
-                tmp.setFinish(project.getFinish());
-            }
-            if (project.getResource() != null) {
-                tmp.setResource(project.getResource());
-            }
-            if (project.getPredecessor() != null) {
-                tmp.setPredecessor(project.getPredecessor());
-            }
-
-//     里程被，开始和完成是同一天
-            if (project.getMilestone() == true || tmp.getMilestone() == true) {
-                tmp.setFinish(project.getStart());
-            }
-            if (project.getProject() != null) {
-                tmp.setProject(project.getProject());
-            }
-            tmp.setMtime(new Date());
-
-            log.info(project.toString());
-            log.info(tmp.toString());
-            projectRepository.save(tmp);
-        } catch (Exception e) {
+//        try {
+        log.info(project.toString());
+        Project tmp = projectRepository.findOneById(project.getId());
+        log.info(tmp.toString());
+        if (tmp == null) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(project);
         }
+
+        if (project.getName() != null) {
+            tmp.setName(project.getName());
+        }
+        if (project.getStart() != null) {
+            tmp.setStart(project.getStart());
+        }
+        if (project.getFinish() != null) {
+            tmp.setFinish(project.getFinish());
+        }
+        if (project.getResource() != null) {
+            tmp.setResource(project.getResource());
+        }
+        if (project.getPredecessor() != null) {
+            tmp.setPredecessor(project.getPredecessor());
+        }
+
+//     里程被，开始和完成是同一天
+        if (project.getMilestone() == true || tmp.getMilestone() == true) {
+            tmp.setFinish(project.getStart());
+        }
+        if (project.getProject() != null) {
+            tmp.setProject(project.getProject());
+        }
+
+        if (tmp.getParent()) {
+            Long n = projectRepository.countByParentId(tmp.getId());
+            if (n == 0L) {
+                tmp.setParent(false);
+            }
+//                log.info("parent number: {}", n);
+        }
+        tmp.setMtime(new Date());
+
+
+        projectRepository.save(tmp);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(project);
+//        }
         if (tmp.getProject() != null && tmp.getProject().getId() > 0) {
             Project parent = projectRepository.findOneById(tmp.getProject().getId());
             parent.setParent(true);
@@ -163,6 +170,13 @@ public class ProjectRestController {
         List<Project> project = projectRepository.findByPredecessor(id);
         return ResponseEntity.ok(project);
     }
+
     // 更新父任务
 //    SELECT id, parent_id FROM test.project where  exists (select id from project p where project.id = p.parent_id) limit 100;
+    @GetMapping("/get/invalidParentTaskLists")
+    public ResponseEntity<List<Long>> invalidParentTaskLists() {
+        List<Long> project = projectRepository.getInvalidParentTaskLists();
+        return ResponseEntity.ok(project);
+    }
+
 }

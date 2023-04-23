@@ -26,18 +26,15 @@ public class Application {
 
     @jakarta.annotation.PostConstruct
     public void init() {
-        System.out.println("==================== init {} ====================");
         log.info("==================== start {} ====================", name);
     }
 
     @jakarta.annotation.PreDestroy
     public void destroy() {
-        System.out.println("==================== destroy {} ====================");
         log.info("==================== destroy {} ====================", name);
     }
 
     public static void main(String[] args) {
-//		System.out.println("Netkiller bottleneck tool!");
         SpringApplication.run(Application.class, args);
     }
 }

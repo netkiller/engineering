@@ -3,13 +3,12 @@ package cn.netkiller.controller.test;//package cn.netkiller.controller;
 //import org.apache.shardingsphere.core.strategy.keygen.SnowflakeShardingKeyGenerator;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-@RefreshScope
+//@RefreshScope
 @RestController
 public class TestRestController {
 
