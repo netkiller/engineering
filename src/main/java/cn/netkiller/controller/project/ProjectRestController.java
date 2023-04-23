@@ -123,6 +123,9 @@ public class ProjectRestController {
         if (project.getResource() != null) {
             tmp.setResource(project.getResource());
         }
+        if(project.getProgress() != null){
+            tmp.setProgress(project.getProgress());
+        }
         if (project.getPredecessor() != null) {
             if (project.getPredecessor() == 0L) {
                 tmp.setPredecessor(null);
@@ -147,7 +150,12 @@ public class ProjectRestController {
             }
         }
         if (project.getProject() != null) {
-            tmp.setProject(project.getProject());
+            if (project.getProject().getId() == 0) {
+                tmp.setProject(null);
+            } else {
+                tmp.setProject(project.getProject());
+            }
+
         }
 
         if (tmp.getParent()) {

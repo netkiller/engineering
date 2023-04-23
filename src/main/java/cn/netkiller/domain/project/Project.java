@@ -36,7 +36,7 @@ public class Project implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd")
     public Date finish;
     public String resource;
-    //    public Long parent;
+    public Integer progress = 0;
     public Long predecessor;
 
 
