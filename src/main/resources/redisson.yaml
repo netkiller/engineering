@@ -1,0 +1,4 @@
+singleServerConfig:
+  address: redis://172.18.200.5:6379
+#  password: passw0rd
+  database: 0
