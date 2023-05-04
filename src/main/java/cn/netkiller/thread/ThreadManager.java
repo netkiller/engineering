@@ -58,7 +58,6 @@ public class ThreadManager {
     public void stop(Long threadId) {
         Thread thread = this.fetchThread(threadId);
         System.out.println(thread.toString());
-//        thread.interrupt();
         thread.stop();
     }
 

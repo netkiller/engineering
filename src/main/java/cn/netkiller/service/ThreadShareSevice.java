@@ -1,4 +1,9 @@
 package cn.netkiller.service;
 
-public interface ThreadSharedSevice {
+import java.util.Map;
+
+public interface ThreadShareSevice {
+    Map<String, Object> get();
+
+    void set(String key, String value);
 }

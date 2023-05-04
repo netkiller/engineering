@@ -5,23 +5,23 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.util.concurrent.ThreadPoolExecutor;
+
 @Configuration
 @EnableAsync
-public class ExecutorConfiguration {
+public class ThreadPoolTaskExecutorConfiguration {
     @Bean("asyncExecutor")
     public ThreadPoolTaskExecutor executor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        //设置线程名
-        executor.setThreadNamePrefix("async-method-execute-");
-        //设置核心线程数
-        executor.setCorePoolSize(10);
-        //设置最大线程数
-        executor.setMaxPoolSize(50);
-        //线程池所使用的缓冲队列
-        executor.setQueueCapacity(100);
-        //设置多余线程等待的时间，单位：秒
-        executor.setKeepAliveSeconds(10);
-        // 初始化线程
+        executor.setThreadGroupName("job");
+        executor.setThreadNamePrefix("async-job-");
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(10);
+        executor.setQueueCapacity(10);
+        executor.setKeepAliveSeconds(60);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+        executor.setAwaitTerminationSeconds(60);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.initialize();
         return executor;
     }
