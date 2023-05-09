@@ -3,7 +3,6 @@ package cn.netkiller.controller.test;//package cn.netkiller.controller;
 import cn.netkiller.service.AsyncTestService;
 import cn.netkiller.service.ThreadShareSevice;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskRejectedException;
 import org.springframework.http.ResponseEntity;
