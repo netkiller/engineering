@@ -187,4 +187,110 @@ public class TestThreadController {
     }
 
 
+    @GetMapping("/completableFutureRun")
+    public String completableFutureRun() {
+        CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> {
+            System.out.println(Thread.currentThread().getName() + " - CompletableFuture 前置任务");
+            try {
+                Thread.sleep(5 * 1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        CompletableFuture thenRun = completableFuture.thenRun(() -> {
+            System.out.println(Thread.currentThread().getName() + " - 接着执行第二个 thenRun 任务");
+        });
+        CompletableFuture thenRunAsync = completableFuture.thenRunAsync(() -> {
+            System.out.println(Thread.currentThread().getName() + " - 接着执行第二个 thenRunAsync 任务");
+        });
+        return "Done";
+    }
+
+    @GetMapping("/completableFutureAccept")
+    public String completableFutureAccept() {
+        CompletableFuture<String> supplyAsync = CompletableFuture.supplyAsync(() -> {
+            log.info(Thread.currentThread().getName() + " - CompletableFuture 前置任务");
+            try {
+                Thread.sleep(5 * 1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return "前置任务执行完成";
+        });
+        CompletableFuture<Void> thenAccept = supplyAsync.thenAccept((rev) -> {
+            log.info(Thread.currentThread().getName() + " - 接着执行第二个 thenAccept 任务");
+            log.info("前置任务返回值：" + rev);
+        });
+        CompletableFuture<Void> thenAcceptAsync = supplyAsync.thenAcceptAsync((rev) -> {
+            log.info(Thread.currentThread().getName() + " - 接着执行第二个 thenAcceptAsync 任务");
+            log.info("前置任务返回值：" + rev);
+        });
+        return "Done";
+    }
+
+    @GetMapping("/completableFutureApply")
+    public String completableFutureApply() throws ExecutionException, InterruptedException {
+        CompletableFuture<String> supplyAsync = CompletableFuture.supplyAsync(() -> {
+            log.info(Thread.currentThread().getName() + " - CompletableFuture 前置任务");
+            try {
+                Thread.sleep(5 * 1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return "第一步";
+        });
+
+        CompletableFuture<String> thenApply = supplyAsync.thenApply((rev) -> {
+            log.info(Thread.currentThread().getName() + " - 接着执行第二个 thenApply 任务");
+            log.info("前置任务返回值：" + rev);
+            return "第二步";
+        });
+
+        CompletableFuture<String> thenApplyAsync = supplyAsync.thenApplyAsync((rev) -> {
+            log.info(Thread.currentThread().getName() + " - 接着执行第二个 thenApplyAsync 任务");
+            log.info("前置任务返回值：" + rev);
+            return "第二步";
+        });
+        log.info("supplyAsync：{}", supplyAsync.get());
+        log.info("thenApply：{}", thenApply.get());
+        log.info("thenApplyAsync：{}", thenApplyAsync.get());
+        return "Done";
+    }
+
+    @GetMapping("/completableFutureWhenComplete")
+    public String completableFutureWhenComplete() throws ExecutionException, InterruptedException {
+
+        CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+            System.out.println("当前线程名称：" + Thread.currentThread().getName());
+            return "前置任务完成";
+        }).whenComplete((result, throwable) -> {
+            System.out.println("前置任务返回值：" + result);
+        });
+        System.out.println(completableFuture.get());
+        return "Done";
+    }
+
+    @GetMapping("/completableFutureExceptionally")
+    public String completableFutureExceptionally() throws ExecutionException, InterruptedException {
+
+        CompletableFuture.supplyAsync(() -> {
+            System.out.println("当前线程名称：" + Thread.currentThread().getName());
+            throw new RuntimeException();
+        }).exceptionally((e) -> {
+            System.out.println(e.getMessage());
+            return "程序出现异常";
+        });
+
+//        CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+////            throw new RuntimeException();
+//            return "程序出现异常";
+//        }).exceptionally((e) -> {
+//            System.out.println("程序出现异常");
+//            return "程序出现异常";
+//        });
+//        System.out.println(completableFuture.get());
+
+        return "Done";
+    }
+
 }
